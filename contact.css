@@ -1,0 +1,128 @@
+@charset "utf-8";
+*{
+
+     margin:0;
+     padding:0;
+
+
+}
+
+
+.header{
+    height: 60px;
+    width: 100%;
+    box-shadow: 0 0 5px #cccccc;
+    background-color: white;
+
+    top: 0;
+}
+.header-left{
+   float:left;
+}
+
+.header-right{
+    float:right;
+}
+.clear{
+clear: both;
+}
+.header-logo{
+height: 50px;
+margin-top:8px;
+margin-left: 20px;
+}
+.header-right a{
+    line-height:56px;
+    color: #5a5c5f;
+    margin-left: 5px;
+    font-size: 16px;
+    padding: 16px 5px;
+}
+.output {
+
+
+}
+.header-right a:hover{
+    background-color:#bbd;
+
+}
+
+
+
+.line {
+  fill: none;
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 80px;
+  height: 16px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 0px;
+  pointer-events: none;
+}
+.hidden{
+  display: none;
+}
+
+.main{
+  margin-left: 20px;
+}
+
+.select_bar {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: left;
+  list-style: none;
+
+}
+
+.select_bar li{
+ margin: 0;
+height:50px;
+  width : 20%;
+  background-color: #aaaaaa;
+text-align: center;
+line-height:50px;
+}
+.heading_list{
+  background-color: #f66
+}
+
+.heading_option{
+  background-color: #66f
+}
+.heading_area{
+  background-color: #6ff
+}
+.heading_csv{
+  background-color: #a2f
+}
+.heading_new_point{
+  background-color: #66f
+}
+.kari {
+width : 100%;
+  padding: 1rem 1.5rem;
+  min-height: 8rem;
+  border-radius: 0 0 4px 4px;
+  text-shadow: none;
+}
+
+
+.tick{
+color: #888888;
+
+}
+
+.kari{
+background-color:#888888;
+}

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>らくらくプロットツール(座標計算、測量対応)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel ="stylesheet" href ="index.css">
+  <link rel ="stylesheet" href="responsive.css">
+</head>
+
+<body>
+    <!--タイトルを加える -->
+    <div class="header">
+      <div class ="container">
+        <div class="header-left">
+          <a href="index.html"><img class="header-logo" src="static/title.jpg" alt="logo"></a>
+
+        </div>
+        <div class="header-right">
+          <a href="index.html">トップ</a>
+          <a href="contact.html">コンタクト</a>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <br>
+  <div class = figure >
+    <svg>
+    </svg>
+  </div>
+  <!--この位置をメニューボタン的な奴に -->
+  <div class= menu>
+  <ul class = select_bar>
+    <li>
+    <div class =select_button>
+      <div class =heading_list>
+        座標リスト
+      </div>
+    </div>
+  </li>
+    <li>
+    <div class =select_button>
+      <div class =heading_option>
+        表示設定
+      </div>
+    </div>
+    </li>
+      <li>
+    <div class =select_button>
+      <div class =heading_area>
+        面積
+      </div>
+    </div>
+    </li>
+
+
+      <li>
+    <div class =select_button>
+      <div class =heading_csv>
+        ファイル
+      </div>
+    </div>
+    </li>
+      <li>
+    <div class =select_button>
+      <div class =heading_new_point>
+        新点作成
+      </div>
+    </div>
+    </li>
+  </ul>
+
+<div class ="section">
+  <div class="list">
+    <div class>
+      <div class="list-inner">
+      <h3>点リスト</h3>
+      <form action ="#" id = "list_form">
+      <table id ="points_list">
+
+      </table>
+      <br>
+      <div class="list_dicision">
+      <button  type ="button" onclick="listFormReset()" value="取り消し" >取り消し
+      </button>
+      <input  type="submit" value="決定" >
+        </div>
+    </form>
+
+  </div>
+  </div>
+</div>
+
+<div class="option">
+
+  <div class="hidden">
+
+      <div class ="option-inner">
+      <form action ="#" id="form">
+        <h3>設定</h3>
+        <h3>軸設定</h3>
+        <label><input type="radio" name="sokuryo_math" value="math" checked >
+          幾何モード(x軸が左右、y軸が上下のモード)
+        </label>
+        <label><input type="radio" name="sokuryo_math" value="sokuryo">
+          測量モード(x軸が上下、y軸が左右のモード)
+        </label>
+
+        <br>
+        <br>
+        <h3>角度表記</h3>
+        <label><input type="radio" name="angle_notation" value="dosuhou_fun" checked>
+          度数法(分秒表記)
+        </label>
+        <label><input type="radio" name="angle_notation" value="dosuhou_10shin">
+          度数法(小数10進法表記)
+        </label>
+        <label><input type="radio" name="angle_notation" value="radian">
+          ラジアン(少数表記)
+        </label>
+        <label><input type="radio" name="angle_notation" value="radian_pi">
+          ラジアン(π表記)
+        </label>
+
+        <br>
+        <br>
+        <h3>少数の表示けた数</h3>
+        <label><input type="radio" name="digit" value="0">
+          0桁
+        </label>
+        <label><input type="radio" name="digit" value="1">
+          1桁
+        </label>
+        <label><input type="radio" name="digit" value="2">
+          2桁
+        </label>
+        <label><input type="radio" name="digit" value="3" checked>
+          3桁
+        </label>
+        <label><input type="radio" name="digit" value="4">
+          4桁
+        </label>
+        <label><input type="radio" name="digit" value="5">
+          5桁
+        </label>
+
+        <h3>表示・非表示</h3>
+
+
+        <label><input type="checkbox" name="angle_indication" value="angle_on" checked>
+          角度
+        </label>
+        <label><input type="checkbox" name="distance_indication" value="distance_on" checked>
+          距離
+        </label>
+        <label><input type="checkbox" name="name_indication" value="name_on" checked>
+          点名
+        </label>
+        <label><input type="checkbox" name="grid_indication" value="grid_on" checked>
+          グリッド
+        </label>
+        <label><input type="checkbox" name="hover_indication" value="hove_on" checked>
+        座標値(点を上にマウス置いた際)
+        </label>
+
+
+
+        <div class ="imput-form" id ="kettei">
+          <div class="imput-form-inner">
+            <br>
+            <input class="sakusei" type="submit" value="決定" >
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+  <div class ="area_select">
+    <div class="hidden">
+      <div class="area-inner">
+        <h3>面積を計算する</h3>
+        <p>計算したい点をクリックして結ぶことで面積を計算します。</p>
+        <br>
+        <p>面積表示の削除</p>
+        <button type="button" onclick="areaDelete()">面積を消す</button>
+    </div>
+  </div>
+  </div>
+
+  <div class ="read_csv">
+    <div class ="hidden">
+      <div class="form-inner">
+      <form  action =# id ="read_csv">
+        <!---csvファイルを選択し読み込めるようにする、理想はドラッグアンドドロップ、目標、追加と新規を使い分ける--->
+          <h3>CSVファイルから点の読み込み</h3>
+        <input type="file" id="example1" >
+        <br>
+        <label><input type="radio" name="new_add" value="new_point"  id="new_add">
+          新規
+        </label>
+        <br>
+        <label><input type="radio" name="new_add" value="add" checked id="new_add">
+          追加
+        </label>
+        <br>
+        <input class="sakusei" type="submit" value="読み込んだ点を送信" >
+      </form>
+    <br>
+      <h3>点の出力</h3>
+
+            <form  action =# id ="output">
+                <!---
+      <label><input type="radio"name="output_type"value="csv"checked>
+        CSVファイル(カンマ区切りのCSVファイルを出力します、点の情報のみですが、Excel等で編集が可能です。)
+      </label>
+      <br>
+      <label><input type="radio"name="output_type"value="text">
+        textファイル(再度読み込んだ際に作成した線も表示しますが、編集は不可です。)
+      </label>
+      <br>
+    -->
+    CSV形式で点を出力します。
+    <br>
+      <input class="sakusei" type="submit" value="ダウンロード" >
+            <a id="download" target="_blank"></a>
+    </form>
+    </div>
+  </div>
+</div>
+  <div class ="create_new_point">
+    <div class ="hidden">
+      <div class="new_point-inner">
+
+        <h5>2点の中点</h5>
+        <form action=# id ="create_midpoint">
+        点
+        <select name="m_p1">
+
+        </select>
+        点
+        <select name="m_p2">
+
+        </select>
+        の中点を
+    <input class="sakusei" type="submit" value="作成する" >
+      </form>
+
+      <h5>2直線の交点</h5>
+      <form action=# id ="create_cross_point">
+      直線
+      <select name="c_p1" id ="c_p1">
+
+      </select>
+      <select name="c_p2">
+
+      </select>,
+      直線
+      <select name="c_p3">
+
+      </select>
+      <select name="c_p4">
+
+      </select>
+      の交点を
+  <input class="sakusei" type="submit" value="作成する" >
+    </form>
+<!--- 以下まだ未実装の機能
+      <h5>直線からの延長点</h5>
+      <form action=# id ="create_entyou_point">
+              直線
+        <select name="e_p1">
+
+        </select>
+        <select name="e_p2">
+
+        </select>
+        のうち最初の点から距離
+        <input type ="text" name ="distance" value ="" size=6>
+        延長した点を
+  <input class="sakusei" type="submit" value="作成する" >
+
+      </form>
+
+
+      <h5>2点から角度と距離を指定して点を計算（トラバース計算）</h5>
+
+      --->
+      <h5>座標を直接入力する</h5>
+      <form action ="#" id='direct_input'>
+        点名
+        <input type ="text" name ="name1" value ="" size= 10>
+        (
+        <input type="text" name="x1"  value="" size= 10>,
+        <input type="text" name="y1"  value="" size= 10>
+        )
+        <br>
+        <input class="sakusei" type="submit" value="入力した座標を追加" >
+
+
+      </form>
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+  <script src="jquery/jquery-3.4.1.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!---<script src="d3/d3.min.js"></script> --->
+  <script type="text/javascript" src="script/ed-figure.js">
+  </script>
+  <script type="text/javascript" src="script/ed-text.js">
+  </script>
+  <noscript>noJavascript</noscript>
+
+</body>
+
+</html>
