@@ -213,7 +213,22 @@ document.getElementById('create_midpoint').onsubmit = function(event){
     createNewPoint(cross_point.x_co,cross_point.y_co,tmp_name)
   }
 
+  document.getElementById('create_traverse_point').onsubmit = function(event){
+    event.preventDefault();
+    let p1 = translateNumberToPoint(document.getElementById('create_traverse_point').t_p1.value)
+    let p2 = translateNumberToPoint(document.getElementById('create_traverse_point').t_p2.value)
+    let p3 = translateNumberToPoint(document.getElementById('create_traverse_point').t_p3.value)
+    let t1 = Number(document.getElementById('create_traverse_point').t_angle.value)
+    let d1 = Number(document.getElementById('create_traverse_point').t_distance.value)
+    let tmp_angle = calAngle(p2,p3)
+    let traverse_point= calNewPointPolar(p1,tmp_angle+t1,d1)
+    console.log(traverse_point)
+    //点の位置が決まったので新点を作成する。
 
+    //名前を決める、ここが未完成
+    let tmp_name="新点"+p1.name+"-1"
+    createNewPoint(traverse_point.x_co,traverse_point.y_co,tmp_name)
+  }
 
   document.getElementById('list_form').reset = function(event){
     event.preventDefault();

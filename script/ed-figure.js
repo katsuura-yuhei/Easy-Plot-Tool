@@ -388,6 +388,13 @@ function calAngle(point1,point2){
   }
   return angle12
 }
+//指定した点から、角度と距離を入力すると新点を出す計算(極座標計算)
+function calNewPointPolar(point,angle,distance){
+  let p_x_co =point.x_co+distance * Math.cos(angle)
+  let p_y_co =point.y_co+distance *Math.sin(angle)
+  return {name:"tmp",x_co:p_x_co,y_co:p_y_co,num:-1}
+}
+
 
 function drawAreaLine(point1,point2){
   
@@ -632,7 +639,7 @@ function rounding(length,floor_or_round ,round_digits){
   return   result
 }
 
-//右のサイトのやつを利用　https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/round
+//右のサイトを利用　https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/round
 function round(number, precision) {
   var shift = function (number, precision, reverseShift) {
     if (reverseShift) {
