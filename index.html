@@ -231,7 +231,7 @@
     <div class ="hidden">
       <div class="new_point-inner">
 
-        <h5>2点の中点</h5>
+        <h4>2点の中点</h4>
         <form action=# id ="create_midpoint">
         点
         <select name="m_p1">
@@ -245,25 +245,25 @@
     <input class="sakusei" type="submit" value="作成する" >
       </form>
 
-      <h5>2直線の交点</h5>
+      <h4>2直線の交点</h4>
       <form action=# id ="create_cross_point">
-      直線
-      <select name="c_p1" id ="c_p1">
+        直線
+        <select name="c_p1" id ="c_p1">
 
-      </select>
-      <select name="c_p2">
+        </select>
+        <select name="c_p2">
 
-      </select>,
-      直線
-      <select name="c_p3">
+        </select>,
+        直線
+        <select name="c_p3">
 
-      </select>
-      <select name="c_p4">
+        </select>
+        <select name="c_p4">
 
-      </select>
-      の交点を
-  <input class="sakusei" type="submit" value="作成する" >
-    </form>
+        </select>
+        の交点を
+        <input class="sakusei" type="submit" value="作成する" >
+      </form>
 <!--- 以下まだ未実装の機能
       <h5>直線からの延長点</h5>
       <form action=# id ="create_entyou_point">
@@ -280,12 +280,32 @@
   <input class="sakusei" type="submit" value="作成する" >
 
       </form>
-
-
-      <h5>2点から角度と距離を指定して点を計算（トラバース計算）</h5>
-
       --->
-      <h5>座標を直接入力する</h5>
+      <br>
+
+      <h4>2点から角度と距離を指定して点を計算（トラバース計算）</h4>
+      <form action=# id ="create_traverse_point">
+        点
+        <select name="t_p1">
+        </select>
+        から
+        <br>
+        <h5>方向</h5>
+        <select name="t_p2">
+        </select>
+        <select name="t_p3">
+        </select>
+        ベクトルから
+        <input type="text" name="t_angle"  value="" size= 10>(度)or(rad)
+        <br>
+        <h5>距離</h5>
+        <input type="text" name="t_distance"  value="" size= 10>
+        <br>
+        の点を<input class="sakusei" type="submit" value="作成する" >
+      </form>
+
+      <br>
+      <h4>座標を直接入力する</h4>
       <form action ="#" id='direct_input'>
         点名
         <input type ="text" name ="name1" value ="" size= 10>
