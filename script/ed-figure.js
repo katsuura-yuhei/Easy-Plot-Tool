@@ -19,6 +19,13 @@ if(window.innerWidth<500){height =400}
 let x = d3.scaleLinear()
 .domain([0,width])
 .range([0,width]);
+let arcX =d3.scaleLinear()
+.domain([0,width])
+.range([0,width]);
+let arcY =d3.scaleLinear()
+.domain([0,height])
+.range([height, 0]);
+
 let y = d3.scaleLinear()
 .domain([0,height])
 .range([height, 0]);
@@ -57,6 +64,17 @@ let link =  svg.selectAll("line")
 .style("stroke", "black")
 
 let edit_mode = "edit_point"
+//上のedit_modeと共有した方がよい？？
+let click_input_mode = false
+function clickInputMode(){
+  click_input_mode = true
+
+}
+function clickInputModeKaijo(){
+  click_input_mode = false
+}
+
+
 let x_move = 0
 let y_move = 0
 let bairitsu = 1
@@ -131,7 +149,7 @@ function zoomed() {
   .selectAll(".areas_text")
   .attr("font-size",font_size_num/d3.event.transform.k)
   .attr("transform", d3.event.transform);
-  
+
   svg
   .selectAll(".areas_line")
   .attr("transform", d3.event.transform)
@@ -144,7 +162,7 @@ function zoomed() {
   svg.selectAll(".links_line_text").attr("transform", d3.event.transform)
   .attr("font-size",font_size_num/d3.event.transform.k)
   .attr("transform", d3.event.transform);
-  
+
 
 
   //重くなりそうな処理、角度をforloopでとる
@@ -263,7 +281,6 @@ area += points_list[points_list.length-1].x_co*(points_list[0].y_co-points_list[
 
   return Math.abs(area)
 }
-
 
 function calDistance(point1,point2){
   let distance =Math.pow((Math.pow((point1[0]-point2[0]),2)+Math.pow((point1[1]-point2[1]),2)),0.5)
@@ -395,9 +412,8 @@ function calNewPointPolar(point,angle,distance){
   return {name:"tmp",x_co:p_x_co,y_co:p_y_co,num:-1}
 }
 
-
 function drawAreaLine(point1,point2){
-  
+
   svg
   .select(".areas")
   .append("line")
@@ -410,7 +426,7 @@ function drawAreaLine(point1,point2){
   .attr("y1",function(d){return y(point1.y_co);})
   .attr("y2",function(d){return y(point2.y_co);})
   .attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")")
-  
+
 }
 
 //ラジアン表記で3つの点の角度を示す関数
@@ -428,7 +444,6 @@ function resetted() {
   .duration(750)
   .call(zoom.transform, d3.zoomIdentity);
 }
-
 
 //線を引く関数
 function drawLine(links){
@@ -464,7 +479,7 @@ function drawLine(links){
       svg.select(".lines").selectAll(".links_line").remove()
       svg.select(".lines").selectAll(".links_line_text").remove()
       //svg.selectAll(`.angle_texts${d[0].num}`).remove()
-      
+
       //svg.selectAll(`.angle_texts${d[1].num}`).remove()
       svg.selectAll(".angle_texts"+d[0].num).remove()
       svg.selectAll(".angle_texts"+d[1].num).remove()
@@ -521,7 +536,6 @@ function angle_max_180(angle1,angle2){
 
 //一つの点から2つ以上線が出ていることを判定し角度を書く関数
 function autoDrawAngle(point,links,mode){
-  console.log(links)
 
   var point_lines =[];
   for(let i = 0;i<links.length;i++){
@@ -612,7 +626,7 @@ function translateAngle(angle_size,mode,round_digits){
     //${Math.round((angle_degree_size*60-Math.floor(angle_degree_size*60))*60)}"`
     result = Math.floor(angle_degree_size)+"°"+Math.floor((angle_degree_size-Math.floor(angle_degree_size))*60)+"\'"+
     Math.round((angle_degree_size*60-Math.floor(angle_degree_size*60))*60)
-  
+
   }
   if(mode == "dosuhou_10shin"){
     let angle_degree_size = angle_size*180/Math.PI
@@ -663,11 +677,51 @@ function judgeSameLink(save_link,links){
   return hantei
 }
 
+//新たに命名する名前にダブりがあった場合-1,-2....をつける関数
+function nameAdjust(name){
+  let adname = name
+  for(let i in points){
+    //同じ文字列があるか判断
+    if (adname ==points[i].name){
+      console.log("onaji")
+      //-nになっているか判断
+      //正規表現で-nを探索
+      let haifunn =/-\d+$/gm
+      let haifunn2 =/\d+$/gm
+      if(haifunn.test(adname)){
+        console.log("12234")
+        adname = adname.replace(haifunn2,String(Number(adname.match(haifunn2))+1))
+      }else{
+      adname = name +"-1"
+    }
+  }
+  }
+
+
+  return adname
+}
+//データをアップロードする関数。重くならないか不安
+function linksDataUpdate(){
+  for(let i in links){
+    for(let j in points){
+      if(points[j].num == links[i][0].num){
+        links[i][0].name =points[j].name
+        links[i][0].x_co =points[j].x_co
+        links[i][0].y_co =points[j].y_co
+      }
+      if(points[j].num == links[i][1].num){
+        links[i][1].name =points[j].name
+        links[i][1].x_co =points[j].x_co
+        links[i][1].y_co =points[j].y_co
+      }
+    }
+  }
+}
 //リセット後に最初にやる処理をまとめる、線よりも点(circle)が上に来るように改良する。
 function drawFigure(){
   //未、順番を決めるための下地を作る。なんかいい方法ないかな。
   points = translateDataToPoints(points_data,sokuryo_math)
-
+  linksDataUpdate()
   drawGrid()
   drawLine(links);
   plotPoints();
@@ -675,7 +729,8 @@ function drawFigure(){
     autoDrawAngle(points[i],links,angle_notation);
   }
   svg.call(zoom);
-
+//現在の倍率位置に移動するコードを入れる
+svg.call(zoom.transform,d3.zoomIdentity.translate(x_move,y_move).scale(bairitsu))
 }
 //これを場づくりの個所とプロットの個所に分割
 function drawGrid(){
@@ -698,6 +753,17 @@ function drawGrid(){
   y = d3.scaleLinear()
   .domain([0.6*y_chose*(ymin-ymax)+(ymax+ymin)*0.5,0.6*y_chose*(ymax-ymin)+(ymax+ymin)*0.5])
   .range([height, 0]);
+
+arcX=d3.scaleLinear()
+.domain([0, width])
+.range([0.6*x_chose*(xmin-xmax)+(xmax+xmin)*0.5,0.6*x_chose*(xmax-xmin)+(xmax+xmin)*0.5])
+;
+arcY = d3.scaleLinear()
+.domain([height, 0])
+.range([0.6*y_chose*(ymin-ymax)+(ymax+ymin)*0.5,0.6*y_chose*(ymax-ymin)+(ymax+ymin)*0.5])
+;
+//x,yが0点、1点の場合の例外処理を考える
+
 
   /*
   width = length_standard*x_y
@@ -731,6 +797,27 @@ function drawGrid(){
   .on("mouseup",function(d){
     delete_mode =false
     console.log("kaijo")
+  })
+  //正方形をクリックした時の動き、ここでクリックした座標を取得
+  .on("click",function(d){
+    console.log("click")
+    if(click_input_mode){
+    let position = d3.mouse(this)
+    let transform = d3.zoomTransform(this)
+    let zoomhosei = transform.invert(position);
+    //逆関数を作ることでクリックした座標を変換する。
+    let click_point = [arcX(zoomhosei[0]),arcY(zoomhosei[1])]
+    console.log(click_point)
+    let np_name ="新点"
+    np_name =nameAdjust(np_name)
+
+    //測量モードの時逆にならないように条件で分ける
+    if(sokuryo_math =="sokuryo"){
+      createNewPoint(click_point[1],click_point[0],np_name)
+    }else{
+    createNewPoint(click_point[0],click_point[1],np_name)
+  }
+}
   })
 
   xAxis = d3.axisBottom(x)
@@ -770,7 +857,6 @@ function drawGrid(){
 
 function calMidpoint(point1,point2){
 
-
 return {name:"tmp",x_co:(point1.x_co+point2.x_co)/2,y_co:(point1.y_co+point2.y_co)/2,num:-1}
 
 }
@@ -800,7 +886,7 @@ function plotPoints(){
   .attr("cy",function(d){return y(d.y_co);})
   .style("fill","black")
   .attr("id",function(d){return d.num})
-  //ここはマウスをクリックしたときに出るホバーの作成
+  //ここはカーソルでふれたときに出るホバーの作成
   .on("mouseover", function(d) {
     if(hover_mode){
     div.transition()
@@ -815,11 +901,14 @@ function plotPoints(){
     div.transition()
     .duration(100)
     .style("opacity", 0);
-  });
+  })
 
 
   svg.selectAll("circle").on("click",function(d){
     //editmodeが面積計算の場合分け
+
+
+
     if(edit_mode=="cal_area"){
       //エリアリンクで同じ点がないか確認する。
       let hantei = true
@@ -906,6 +995,3 @@ window.onresize=newFigure;
 
 $('svg').empty()
 drawFigure()
-
-
-console.log(calArea(points))

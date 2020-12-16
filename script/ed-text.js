@@ -100,6 +100,7 @@ function makePullDown(){
 let pull_down_inner_text =makePullDownInner(points_data)
 $("select").html(pull_down_inner_text)
 }
+
 function makePullDownInner(points_data){
   let text =""
   for(let i=0;i<points_data.length;i++){
@@ -226,7 +227,7 @@ document.getElementById('create_midpoint').onsubmit = function(event){
     //点の位置が決まったので新点を作成する。
 
     //名前を決める、ここが未完成
-    let tmp_name="新点"+p1.name+"-1"
+    let tmp_name=nameAdjust(p1.name)
     createNewPoint(traverse_point.x_co,traverse_point.y_co,tmp_name)
   }
 
@@ -246,6 +247,16 @@ function listFormReset(){
   $('table').empty()
   makeList(points_data)
 
+}
+
+function changeClickImput(){
+  consle.log("click_input_mode")
+  click_input_mode = true
+}
+
+function cancelClickImput(){
+  consle.log("click_input_cancel")
+  click_input_mode = false
 }
 
 document.getElementById('form').onsubmit　= function(event){

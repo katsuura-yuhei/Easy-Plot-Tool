@@ -303,8 +303,15 @@
         <br>
         の点を<input class="sakusei" type="submit" value="作成する" >
       </form>
-
       <br>
+      <h4>図上でクリックして点を追加する</h4>
+
+    <button  type ="button" onclick="clickInputMode()" value="図上入力" >図上入力モード
+    </button>
+    <button  type ="button" onclick="clickInputModeKaijo()" value="図上入力" >図上入力解除
+    </button>
+    <br>※図上入力モードでは図をクリックするとクリックした場所に新点を追加します。
+          <br><br>
       <h4>座標を直接入力する</h4>
       <form action ="#" id='direct_input'>
         点名
