@@ -36,7 +36,31 @@ $(document).ready(function(){
     $('.create_new_point >div').addClass('hidden');
   }
 
+
+
 });
+
+function traverseMenuChange(angle_notation){
+  $('.radian >div').addClass('hidden');
+  $('.radian_pi >div').addClass('hidden');
+  $('.dosuhou_fun >div').addClass('hidden');
+  $('.dosuhou_10shin >div').addClass('hidden');
+
+  if(angle_notation=="radian"){
+    $('.radian >div').toggleClass('hidden');
+  }
+  if(angle_notation=="radian_pi"){
+    $('.radian_pi >div').toggleClass('hidden');
+  }
+  if(angle_notation=="dosuhou_fun"){
+    $('.dosuhou_fun >div').toggleClass('hidden');
+  }
+  if(angle_notation=="dosuhou_10shin"){
+    $('.dosuhou_10shin >div').toggleClass('hidden');
+  }
+}
+
+
 
 function unvisibleAngle(){
   //gのクラスを用いてそこを非表示にする関するを設定。
@@ -218,10 +242,26 @@ document.getElementById('create_midpoint').onsubmit = function(event){
     event.preventDefault();
     let p1 = translateNumberToPoint(document.getElementById('create_traverse_point').t_p1.value)
     let p2 = translateNumberToPoint(document.getElementById('create_traverse_point').t_p2.value)
-    let p3 = translateNumberToPoint(document.getElementById('create_traverse_point').t_p3.value)
-    let t1 = Number(document.getElementById('create_traverse_point').t_angle.value)
+    //let p3 = translateNumberToPoint(document.getElementById('create_traverse_point').t_p3.value)
     let d1 = Number(document.getElementById('create_traverse_point').t_distance.value)
-    let tmp_angle = calAngle(p2,p3)
+    let t1 = 0
+      if(angle_notation== "dosuhou_fun"){
+    let t_angle_do = Number(document.getElementById('create_traverse_point').t_angle_do.value)
+    let t_angle_fun = Number(document.getElementById('create_traverse_point').t_angle_fun.value)
+    let t_angle_byou = Number(document.getElementById('create_traverse_point').t_angle_byou.value)
+    t1 = translateFunByou(t_angle_do,t_angle_fun,t_angle_byou)
+    console.log(t_angle_do)
+    console.log(t1)
+
+    }else{
+
+    t1 = Number(document.getElementById('create_traverse_point').t_angle.value)
+
+    //角度を弧度法に変換する。
+    t1 = translateAngle2(t1,angle_notation)
+  }
+    //let tmp_angle = calAngle(p2,p3)
+    let tmp_angle =calAngle(p1,p2)
     let traverse_point= calNewPointPolar(p1,tmp_angle+t1,d1)
     console.log(traverse_point)
     //点の位置が決まったので新点を作成する。
@@ -288,7 +328,7 @@ sokuryo_math = a
 
 angle_notation = b
 digit = Number(c)
-
+traverseMenuChange(angle_notation)
 //sokuryo_math = document.getElementById('form').sokuryo_math.value
 //angle_notation = document.getElementById('form').angle_notation.value
 //digit = Number(document.getElementById("form").digit.value)

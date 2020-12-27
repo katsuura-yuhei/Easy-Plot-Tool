@@ -218,14 +218,22 @@ function translateDataToPoints(points_data,sokuryo_math){
   return points
 }
 
+
+
 function createNewPoint(x_co,y_co,name){
   console.log(x_co)
-  let new_num = points_data[points_data.length-1].num +1
-  let new_point_data ={name:name,x_co:Number(x_co),y_co:Number(y_co),num:new_num}
-  points_data.push(new_point_data)
+  //ポイントのデータがないときに処理ができるようifを変える。
+  if(points_data.length ==0){
+    let new_point_data ={name:name,x_co:Number(x_co),y_co:Number(y_co),num:1}
+    points_data.push(new_point_data)
+  }else{
+    let new_num = points_data[points_data.length-1].num +1
+    let new_point_data ={name:name,x_co:Number(x_co),y_co:Number(y_co),num:new_num}
+    points_data.push(new_point_data)
+  }
   translateDataToPoints(points_data,sokuryo_math)
   //リストに反映
-    $('table').empty()
+  $('table').empty()
   makeList(points_data)
   $('svg').empty()
   drawFigure()
@@ -235,49 +243,49 @@ function createNewPoint(x_co,y_co,name){
 
 //リストから面積を図形の中心に描写する関数
 function drawArea(points_list){
-let centroid = calCentroid(points_list)
-let area = calArea(points_list)
-console.log(centroid)
-console.log(area)
-//ここから面積を記載するためのd3の表記をする。
-svg.select(".areas")
-//.selectAll(".texts")
-.append("text")
-.attr("class","areas_text")
-.attr("fill","#1fde9b")
-.attr("x",x(centroid.x_co))
-.attr("y",y(centroid.y_co))
-.text(rounding(area,floor_or_round,digit))
-.attr("font-size",font_size_num/bairitsu)
-.attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")");
+  let centroid = calCentroid(points_list)
+  let area = calArea(points_list)
+  console.log(centroid)
+  console.log(area)
+  //ここから面積を記載するためのd3の表記をする。
+  svg.select(".areas")
+  //.selectAll(".texts")
+  .append("text")
+  .attr("class","areas_text")
+  .attr("fill","#1fde9b")
+  .attr("x",x(centroid.x_co))
+  .attr("y",y(centroid.y_co))
+  .text(rounding(area,floor_or_round,digit))
+  .attr("font-size",font_size_num/bairitsu)
+  .attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")");
 
 }
 
 //重心を計算する関数
 function calCentroid(points_list){
-let centroid_x_co = 0
-let centroid_y_co = 0
-for(let i=0;i<points_list.length;i++){
-centroid_x_co += points_list[i].x_co
-centroid_y_co += points_list[i].y_co
-}
-centroid_x_co =centroid_x_co/points_list.length
-centroid_y_co = centroid_y_co/points_list.length
-return {x_co:centroid_x_co,y_co:centroid_y_co}
+  let centroid_x_co = 0
+  let centroid_y_co = 0
+  for(let i=0;i<points_list.length;i++){
+    centroid_x_co += points_list[i].x_co
+    centroid_y_co += points_list[i].y_co
+  }
+  centroid_x_co =centroid_x_co/points_list.length
+  centroid_y_co = centroid_y_co/points_list.length
+  return {x_co:centroid_x_co,y_co:centroid_y_co}
 }
 
 //点のリストから面積を計算する関数
 function calArea(points_list){
-let area = 0
-console.log(points_list.length)
-if(points_list.length>2){
-//座標法で面積を計算する
-area += points_list[0].x_co*(points_list[1].y_co-points_list[points_list.length-1].y_co)/2
-for(let i = 1;i<points_list.length-1;i++){
-area += points_list[i].x_co*(points_list[i+1].y_co-points_list[i-1].y_co)/2
-}
-area += points_list[points_list.length-1].x_co*(points_list[0].y_co-points_list[points_list.length-2].y_co)/2
-}
+  let area = 0
+  console.log(points_list.length)
+  if(points_list.length>2){
+    //座標法で面積を計算する
+    area += points_list[0].x_co*(points_list[1].y_co-points_list[points_list.length-1].y_co)/2
+    for(let i = 1;i<points_list.length-1;i++){
+      area += points_list[i].x_co*(points_list[i+1].y_co-points_list[i-1].y_co)/2
+    }
+    area += points_list[points_list.length-1].x_co*(points_list[0].y_co-points_list[points_list.length-2].y_co)/2
+  }
 
   return Math.abs(area)
 }
@@ -289,50 +297,50 @@ function calDistance(point1,point2){
 
 //lineは関数 ax+by+c=0を用いる
 function calDistancePointAndLine(point1,line_function){
-let distance =  Math.abs(point1.x_co*line_function.a+point1*line_function.b+line_function.c)
+  let distance =  Math.abs(point1.x_co*line_function.a+point1*line_function.b+line_function.c)
   /Math.cbrt(Math.pow(line_function.a,2)+Math.pow(line_function.b,2))
-return distance
+  return distance
 }
 
 //垂線とその長さを記載する関数
 function drawPerpendicular(point,link){
-let link_function = linkConbersionFunction(link)
-//リンクと鉛直方向に仮点を一点作る
-let new_tmp_point = {name:"tmp",x_co:point.x_co+link_function.a,y_co:point.y_co+link_function.b,num:-1}
-console.log(new_tmp_point)
-console.log(point)
-console.log(link_function)
-let tmp_link_function = linkConbersionFunction([point,new_tmp_point])
-let cross_point = calCrossPoint(link_function,tmp_link_function)
+  let link_function = linkConbersionFunction(link)
+  //リンクと鉛直方向に仮点を一点作る
+  let new_tmp_point = {name:"tmp",x_co:point.x_co+link_function.a,y_co:point.y_co+link_function.b,num:-1}
+  console.log(new_tmp_point)
+  console.log(point)
+  console.log(link_function)
+  let tmp_link_function = linkConbersionFunction([point,new_tmp_point])
+  let cross_point = calCrossPoint(link_function,tmp_link_function)
 
-console.log(cross_point)
-//グループ化の処理を加える
-svg.append("g").attr("class","perpendicular_line1");
+  console.log(cross_point)
+  //グループ化の処理を加える
+  svg.append("g").attr("class","perpendicular_line1");
 
-svg
+  svg
 
-.select(".perpendicular_line1")
-//.selectAll(".perpendicular_line")
-.append("line")
+  .select(".perpendicular_line1")
+  //.selectAll(".perpendicular_line")
+  .append("line")
 
-.attr("class","links_line")
-.style("stroke", "#1fde9b")
-.style("stroke-width",line_width/bairitsu)
-.attr("x1", x(cross_point.x_co))
-.attr("x2",x(point.x_co))
-.attr("y1",y(cross_point.y_co))
-.attr("y2",y(point.y_co))
-.attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")")
-.on("mouseover",function(d){
-  if(delete_mode){
-
-
-    svg.select(".perpendicular_line1").remove()
+  .attr("class","links_line")
+  .style("stroke", "#1fde9b")
+  .style("stroke-width",line_width/bairitsu)
+  .attr("x1", x(cross_point.x_co))
+  .attr("x2",x(point.x_co))
+  .attr("y1",y(cross_point.y_co))
+  .attr("y2",y(point.y_co))
+  .attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")")
+  .on("mouseover",function(d){
+    if(delete_mode){
 
 
-    //ここに線を消す処理
+      svg.select(".perpendicular_line1").remove()
+
+
+      //ここに線を消す処理
+    }
   }
-}
 );
 
 svg
@@ -351,14 +359,14 @@ svg
 }
 //lineは関数 ax+by+c=0を用いる
 function calCrossPoint(line_function1,line_function2){
-let cross_x =(-line_function2.b*line_function1.c+line_function1.b*line_function2.c)
-/(line_function1.a*line_function2.b-line_function1.b*line_function2.a)
-let cross_y =(line_function2.a*line_function1.c-line_function1.a*line_function2.c)
-/(line_function1.a*line_function2.b-line_function1.b*line_function2.a)
+  let cross_x =(-line_function2.b*line_function1.c+line_function1.b*line_function2.c)
+  /(line_function1.a*line_function2.b-line_function1.b*line_function2.a)
+  let cross_y =(line_function2.a*line_function1.c-line_function1.a*line_function2.c)
+  /(line_function1.a*line_function2.b-line_function1.b*line_function2.a)
 
-//エラー(交わらない場合)の処理も考える
+  //エラー(交わらない場合)の処理も考える
 
-return {name:"tmp",x_co:cross_x,y_co:cross_y,num:-1}
+  return {name:"tmp",x_co:cross_x,y_co:cross_y,num:-1}
 }
 
 //二点の点から
@@ -607,17 +615,37 @@ function autoDrawAngle(point,links,mode){
     //  <path d="M 13,8 L 91,-37 a 90 90 -30 0 1 0,90 z" fill="red" stroke="black"/>
     //var arc = d3.arc();
     //arc({
-  //    innerRadius: 0,
-  //    outerRadius: 100,
-  //  });
-  //  svg.selectAll("arcs").data(each_angles).enter().append("path").attr("d",arc)
+    //    innerRadius: 0,
+    //    outerRadius: 100,
+    //  });
+    //  svg.selectAll("arcs").data(each_angles).enter().append("path").attr("d",arc)
   }
 }
+
+
+function translateFunByou(degree,fun,byou){
+  let radian_angle =  (degree+fun/60+byou/3600)/180*Math.PI
+  
+  return radian_angle
+}
+//ラジアン、ラジアンPI、度数法10進法の角度を弧度法に直す角度
+function translateAngle2(angle_size,mode){
+  if(mode == "radian"){
+    return angle_size
+  }
+  if(mode == "radian_pi"){
+    return angle_size*Math.PI
+  }
+  if(mode == "dosuhou_10shin"){
+    return angle_size/180*Math.PI
+  }
+}
+
 //modeは0がラジアン、1が分秒表記、2が少数表記
 function translateAngle(angle_size,mode,round_digits){
   let result = ""
   if(mode == "radian"){
-  //result = `${round(angle_size,round_digits)}rad`
+    //result = `${round(angle_size,round_digits)}rad`
     result = round(angle_size,round_digits)+"rad"
   }
   if(mode == "dosuhou_fun"){
@@ -630,13 +658,13 @@ function translateAngle(angle_size,mode,round_digits){
   }
   if(mode == "dosuhou_10shin"){
     let angle_degree_size = angle_size*180/Math.PI
-  //  result =`${round(angle_degree_size,round_digits)}°`
+    //  result =`${round(angle_degree_size,round_digits)}°`
     result =round(angle_degree_size,round_digits)+"°"
   }
   if(mode == "radian_pi"){
 
-  //  result = `${round(angle_size/Math.PI,round_digits)}π rad`
-  result = round(angle_size/Math.PI,round_digits)+"π rad"
+    //  result = `${round(angle_size/Math.PI,round_digits)}π rad`
+    result = round(angle_size/Math.PI,round_digits)+"π rad"
   }
 
   return result
@@ -692,9 +720,9 @@ function nameAdjust(name){
         console.log("12234")
         adname = adname.replace(haifunn2,String(Number(adname.match(haifunn2))+1))
       }else{
-      adname = name +"-1"
+        adname = name +"-1"
+      }
     }
-  }
   }
 
 
@@ -729,8 +757,8 @@ function drawFigure(){
     autoDrawAngle(points[i],links,angle_notation);
   }
   svg.call(zoom);
-//現在の倍率位置に移動するコードを入れる
-svg.call(zoom.transform,d3.zoomIdentity.translate(x_move,y_move).scale(bairitsu))
+  //現在の倍率位置に移動するコードを入れる
+  svg.call(zoom.transform,d3.zoomIdentity.translate(x_move,y_move).scale(bairitsu))
 }
 //これを場づくりの個所とプロットの個所に分割
 function drawGrid(){
@@ -738,6 +766,24 @@ function drawGrid(){
   xmin = d3.min(points, function(d) { return d.x_co; })
   ymax = d3.max(points, function(d) { return d.y_co; })
   ymin = d3.min(points, function(d) { return d.y_co; })
+
+  //x,y0,1点の場合の例外処理を仕組む
+  if(points.length==0){
+    xmax=0
+    xmin=0
+    ymax=0
+    ymin=0
+  }
+
+  if(xmax==xmin){
+    xmax += 1
+    xmin -= 1
+  }
+  if(ymax==ymin){
+    ymax+=1
+    ymin-=1
+  }
+
   x_y=(xmax-xmin)/(ymax-ymin)
 
   let x_chose = 1
@@ -754,15 +800,15 @@ function drawGrid(){
   .domain([0.6*y_chose*(ymin-ymax)+(ymax+ymin)*0.5,0.6*y_chose*(ymax-ymin)+(ymax+ymin)*0.5])
   .range([height, 0]);
 
-arcX=d3.scaleLinear()
-.domain([0, width])
-.range([0.6*x_chose*(xmin-xmax)+(xmax+xmin)*0.5,0.6*x_chose*(xmax-xmin)+(xmax+xmin)*0.5])
-;
-arcY = d3.scaleLinear()
-.domain([height, 0])
-.range([0.6*y_chose*(ymin-ymax)+(ymax+ymin)*0.5,0.6*y_chose*(ymax-ymin)+(ymax+ymin)*0.5])
-;
-//x,yが0点、1点の場合の例外処理を考える
+  arcX=d3.scaleLinear()
+  .domain([0, width])
+  .range([0.6*x_chose*(xmin-xmax)+(xmax+xmin)*0.5,0.6*x_chose*(xmax-xmin)+(xmax+xmin)*0.5])
+  ;
+  arcY = d3.scaleLinear()
+  .domain([height, 0])
+  .range([0.6*y_chose*(ymin-ymax)+(ymax+ymin)*0.5,0.6*y_chose*(ymax-ymin)+(ymax+ymin)*0.5])
+  ;
+
 
 
   /*
@@ -771,8 +817,8 @@ arcY = d3.scaleLinear()
   */
 
   svg = d3.select("svg")
-    //  .attr("viewBox", [0, 0, width+1, height+1]);
-    .attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
+  //  .attr("viewBox", [0, 0, width+1, height+1]);
+  .attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
 
 
   valueline = d3.line()
