@@ -1,4 +1,8 @@
 'use strict'
+
+//クエリパラメータを取得
+let querypr = location.search
+console.log(querypr)
 let points_data =[{name:"a",x_co:-10,y_co:1,num:1},{name:"b",x_co:10,y_co:120,num:2},{name:"c",x_co:50,y_co:80,num:3},{name:"d",x_co:-60,y_co:65,num:4}];
 //let points_data =[]
 let points = []
@@ -32,14 +36,17 @@ let y = d3.scaleLinear()
 
 let delete_mode = false
 
+//設定で決めるもの
 let sokuryo_math ="math"
 let angle_notation ="dosuhou_fun"
-
-
+let digit =3
+let dispinfo =[1,1,1,1,1]
+let printing_mode =[false,{width:950,height:550}]
 let font_size =20
 let font_size_num =15
 let line_width = 1.5
 let links =[]
+let perpendicular_links=[]
 let save_point =[false,{name:"",x_co:0,y_co:0}]
 let save_link =[]
 let valueline = d3.line()
@@ -83,7 +90,7 @@ let delete_point_list =[]
 let change_point_list =[]
 let hover_mode = true
 let floor_or_round ="floor"
-let digit =3
+
 let area_link=[]
 
 let points_size=5
@@ -121,6 +128,93 @@ var zoom = d3.zoom()
 //])
 
 .on("zoom", zoomed);
+
+//取得したクエリパラメータを点に変換して表示する関数。
+function queryprCut(querypr){
+  //querypr = decodeURIComponent(querypr)
+  console.log(querypr)
+  if(querypr ==""){
+      return{ver:"",opt:"",pnt:"",ln:""}
+  }
+  console.log(typeof querypr)
+  let version = querypr.match(/[?]ver=\w*&/u)[0]
+  version  = version.match(/\d+/u)[0]
+  let option = querypr.match(/opt=\w*&/u)[0]
+  option  = option.match(/\d+/u)[0]
+  let points = querypr.match(/pnt=([\w_.,%-])*/u)[0]
+  points =  points.slice(4)
+  let lines =querypr.match(/ln=([\w_.,%-])*/u)[0]
+  lines = lines.slice(3)
+  console.log([version,option,points,lines])
+  return{ver:version,opt:option,pnt:points,ln:lines}
+}
+
+function firstOption(opt){
+  //全七桁であり一桁目から7桁目まで情報を持っている。
+  if(opt ==""){
+    return
+  }
+  if(opt.charAt(0)==1){
+    sokuryo_math="math"
+  }else{sokuryo_math="sokuryo"}
+  switch(opt.charAt(1)){
+    case 1:angle_notation = "dosuhou_fun" ; break;
+    case 2:angle_notation = "dosuhou_10shin" ; break;
+    case 3:angle_notation = "radian" ; break;
+    case 4:angle_notation = "radian_pi" ; break;
+  }
+  digit = Number(opt.charAt(2))
+  if(opt.charAt(3)==0){
+    dispinfo[0]=0;
+
+  }
+  if(opt.charAt(4)==0){
+    dispinfo[1]=0;
+
+  }
+  if(opt.charAt(5)==0){
+    dispinfo[2]=0;
+
+  }
+  if(opt.charAt(6)==0){
+    dispinfo[3]=0;
+
+  }
+  if(opt.charAt(7)==0){
+    dispinfo[4]=0;
+
+  }
+}
+//クエリのテキストからポイントを出力する関数。
+function firstPoints(pnt){
+
+    //コンマごとで分割する
+    let point_texts =pnt.split(/,/gim)
+    console.log(point_texts)
+
+    points_data =[]
+    links =[]
+
+    let k =0
+
+    //改行の分だけループする 0行は見出しなので別枠の関数もしくは使用しない、
+    for (let i =0; i <(point_texts.length-1)/3;i++){
+        points_data.push({name:point_texts[3*i],x_co:Number(point_texts[3*i+1]),y_co:Number(point_texts[3*i+2]),num:i+k})
+    }
+  }
+  //線を記載する
+  function firstLines(ln){
+    let links_texts =ln.split(/,/gim)
+    links =[]
+    for (let i =0; i <(links_texts.length-1)/2;i++){
+        links.push([{name:points_data[Number(links_texts[2*i])].name,x_co:points_data[Number(links_texts[2*i])].x_co,
+          y_co:points_data[Number(links_texts[2*i])].y_co,num:points_data[Number(links_texts[2*i])].num},
+          {name:points_data[Number(links_texts[2*i+1])].name,x_co:points_data[Number(links_texts[2*i+1])].x_co,
+            y_co:points_data[Number(links_texts[2*i+1])].y_co,num:points_data[Number(links_texts[2*i+1])].num}
+        ])
+    }
+    console.log(links)
+  }
 
 
 function zoomed() {
@@ -302,42 +396,34 @@ function calDistancePointAndLine(point1,line_function){
   return distance
 }
 
-//垂線とその長さを記載する関数
-function drawPerpendicular(point,link){
-  let link_function = linkConbersionFunction(link)
-  //リンクと鉛直方向に仮点を一点作る
-  let new_tmp_point = {name:"tmp",x_co:point.x_co+link_function.a,y_co:point.y_co+link_function.b,num:-1}
-  console.log(new_tmp_point)
-  console.log(point)
-  console.log(link_function)
-  let tmp_link_function = linkConbersionFunction([point,new_tmp_point])
-  let cross_point = calCrossPoint(link_function,tmp_link_function)
-
-  console.log(cross_point)
+//リンク版を作る(試作品)
+function drawPerpendicular(){
+  console.log(perpendicular_links)
   //グループ化の処理を加える
-  svg.append("g").attr("class","perpendicular_line1");
+  svg.append("g").attr("class","perpendicular_line");
 
   svg
 
-  .select(".perpendicular_line1")
-  //.selectAll(".perpendicular_line")
+  .select(".perpendicular_line")
+  .selectAll(".links_line")
+  .data(perpendicular_links)
+  .enter()
   .append("line")
 
   .attr("class","links_line")
   .style("stroke", "#1fde9b")
   .style("stroke-width",line_width/bairitsu)
-  .attr("x1", x(cross_point.x_co))
-  .attr("x2",x(point.x_co))
-  .attr("y1",y(cross_point.y_co))
-  .attr("y2",y(point.y_co))
+  .attr("x1",function(d){return x(d[0].x_co);} )
+  .attr("x2",function(d){return x(d[2].x_co);})
+  .attr("y1",function(d){return y(d[0].y_co);})
+  .attr("y2",function(d){return y(d[2].y_co);})
   .attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")")
   .on("mouseover",function(d){
     if(delete_mode){
 
 
-      svg.select(".perpendicular_line1").remove()
-
-
+      svg.select(".perpendicular_line").remove()
+      perpendicular_links=[]
       //ここに線を消す処理
     }
   }
@@ -345,18 +431,22 @@ function drawPerpendicular(point,link){
 
 svg
 
-.select(".perpendicular_line1")
+.select(".perpendicular_line")
+.selectAll(".links_line_text")
+.data(perpendicular_links)
+.enter()
 .append("text")
 //.selectAll(".perpendicular_line_text")
 .attr("class","links_line_text")
 .style("fill", "#1fde9b")
 .attr("font-size",font_size_num/bairitsu)
-.attr("x",function(d){return x((cross_point.x_co+point.x_co)/2)})
-.attr("y",function(d){return y((cross_point.y_co+point.y_co)/2)})
-.text(function(d){return rounding(calDistance([cross_point.x_co,cross_point.y_co],[point.x_co,point.y_co]),floor_or_round,digit)})
+.attr("x",function(d){return x((d[0].x_co+d[2].x_co)/2);})
+.attr("y",function(d){return y((d[0].y_co+d[2].y_co)/2);})
+.text(function(d){return rounding(calDistance([d[0].x_co,d[0].y_co],[d[2].x_co,d[2].y_co]),floor_or_round,digit);})
 .attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")");
 
 }
+
 //lineは関数 ax+by+c=0を用いる
 function calCrossPoint(line_function1,line_function2){
   let cross_x =(-line_function2.b*line_function1.c+line_function1.b*line_function2.c)
@@ -500,9 +590,19 @@ function drawLine(links){
   })
   .on("click",function(d){
     if(save_point[0]){
-      drawPerpendicular(save_point[1],d)
+      //同じでないことを確認の上、perpendicularlinksに加える
+      if(!judgeSamePerpendicularLink([save_point[1],d],perpendicular_links)){
+        let link_function = linkConbersionFunction(d)
+        //リンクと鉛直方向に仮点を一点作る
+        let new_tmp_point = {name:"tmp",x_co:save_point[1].x_co+link_function.a,y_co:save_point[1].y_co+link_function.b,num:-1}
+        let tmp_link_function = linkConbersionFunction([save_point[1],new_tmp_point])
+        let cross_point = calCrossPoint(link_function,tmp_link_function)
+        perpendicular_links.push([save_point[1],d,cross_point])
+        drawPerpendicular()
+      }
       save_point[0]=false
       svg.selectAll("circle").style("fill","black")
+
     }
 
   })
@@ -518,6 +618,20 @@ function drawLine(links){
   .attr("transform", "translate(" + x_move + "," + y_move + ") scale(" + bairitsu + ")");
   //ズームの処理をさせることによって新線もzoomに乗るようにしている
 }
+
+function judgeSamePerpendicularLink(save_perpendicular,perpendicular_links){
+  let hantei =false
+  for(var i =0;i<perpendicular_links.length;i++){
+
+    if((save_perpendicular[0].num ==perpendicular_links[i][0].num)&
+    (save_perpendicular[1][0].num==perpendicular_links[i][1][0].num)&
+    (save_perpendicular[1][0].num==perpendicular_links[i][1][0].num)){
+      hantei = true
+    }
+  }
+  return hantei
+}
+
 
 function angle_max_180(angle1,angle2){
   //360度以上のとき360度以下になるよう引く式
@@ -625,7 +739,7 @@ function autoDrawAngle(point,links,mode){
 
 function translateFunByou(degree,fun,byou){
   let radian_angle =  (degree+fun/60+byou/3600)/180*Math.PI
-  
+
   return radian_angle
 }
 //ラジアン、ラジアンPI、度数法10進法の角度を弧度法に直す角度
@@ -747,10 +861,13 @@ function linksDataUpdate(){
 }
 //リセット後に最初にやる処理をまとめる、線よりも点(circle)が上に来るように改良する。
 function drawFigure(){
-  //未、順番を決めるための下地を作る。なんかいい方法ないかな。
+
+
+//未、順番を決めるための下地を作る。なんかいい方法ないかな。
   points = translateDataToPoints(points_data,sokuryo_math)
   linksDataUpdate()
   drawGrid()
+  drawPerpendicular()
   drawLine(links);
   plotPoints();
   for(let i=0; i<points.length;i++){
@@ -759,6 +876,22 @@ function drawFigure(){
   svg.call(zoom);
   //現在の倍率位置に移動するコードを入れる
   svg.call(zoom.transform,d3.zoomIdentity.translate(x_move,y_move).scale(bairitsu))
+
+  if(dispinfo[0]==0){
+  unvisibleAngle()
+}
+if(dispinfo[1]==0){
+  unvisibleDistance()
+}
+if(dispinfo[2]==0){
+  unvisibleName()
+}
+if(dispinfo[3]==0){
+  unvisibleGrid()
+}
+if(dispinfo[4]=0){
+  hover_mode =false
+}
 }
 //これを場づくりの個所とプロットの個所に分割
 function drawGrid(){
@@ -1017,6 +1150,7 @@ function plotPoints(){
 //  [{name:"a",x_co:-810,y_co:1,num:1},{name:"c",x_co:50,y_co:80,num:3}])
 }
 
+
 function areaDelete(){
 
   $(".areas").empty();
@@ -1028,13 +1162,39 @@ function areaDelete(){
 
 function newFigure(){
   $('svg').empty()
+
 width = window.innerWidth -580;
 if(width<400){width= window.innerWidth*0.9}
-//  d3.select("svg")
-    //  .attr("viewBox", [0, 0, width+1, height+1]);
-  //  .attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
+if(printing_mode[0]){
+  width = printing_mode[1].width
+  height = printing_mode[1].height
+}
 
   drawFigure()
+}
+
+
+let query ={
+    "ver": "",
+    "opt": "",
+    "pnt": "",
+    "ln":""
+}
+
+try{
+   query = queryprCut(querypr)
+}catch{
+console.log("不正なクエリパラメータです")
+}
+console.log(query)
+if(query.ver){
+  try{
+  firstOption(query.opt)
+  firstPoints(query.pnt)
+  firstLines(query.ln)
+}catch{
+  console.log("不正なクエリパラメータです")
+}
 }
 
 window.onresize=newFigure;

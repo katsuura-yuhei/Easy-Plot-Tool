@@ -24,315 +24,363 @@
     </div>
   </div>
   <br>
+  <div class ="printing_menu">
+    <div class ="hidden">
+      <div class ="printing_menu_inner">
+        <input type=”text” name=”name” placeholder="題名を入力できます"　size =40%>
+
+      <button  type ="printintng_off" onclick="printingOn()" value="印刷"  >印刷</button>
+      <button  type ="printintng_off" onclick="printingOff()" value="印刷解除" >印刷モード解除
+      </button>
+
+      <div class="paperselect" >
+      <h4>用紙サイズ</h4>
+      <select id ="paperselect" onchange = printingChange()>
+        <option value ="A4横" selected>A4横</option>
+        <option value ="A4縦">A4縦</option>
+        <option value ="A3横">A3横</option>
+        <option value ="A3縦">A3縦</option>
+
+      </select>
+      </div>
+
+    </div>
+      <br>
+    </div>
+  </div>
+
   <div class = figure >
     <svg>
     </svg>
   </div>
   <!--この位置をメニューボタン的な奴に -->
-  <div class= menu>
-    <ul class = select_bar>
-      <li>
-        <div class =select_button>
-          <div class =heading_list>
-            座標リスト
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class =select_button>
-          <div class =heading_option>
-            表示設定
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class =select_button>
-          <div class =heading_area>
-            面積
-          </div>
-        </div>
-      </li>
+  <div class =menu_outer>
+    <div class>
+      <div class= menu>
 
-
-      <li>
-        <div class =select_button>
-          <div class =heading_csv>
-            ファイル
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class =select_button>
-          <div class =heading_new_point>
-            新点作成
-          </div>
-        </div>
-      </li>
-    </ul>
-
-    <div class ="section">
-      <div class="list">
-        <div class>
-          <div class="list-inner">
-            <h3>点リスト</h3>
-            <form action ="#" id = "list_form">
-              <table id ="points_list">
-
-              </table>
-              <br>
-              <div class="list_dicision">
-                <button  type ="button" onclick="listFormReset()" value="取り消し" >取り消し
-                </button>
-                <input  type="submit" value="決定" >
+        <ul class = select_bar>
+          <li>
+            <div class =select_button>
+              <div class =heading_list>
+                座標リスト
               </div>
-            </form>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="option">
-
-        <div class="hidden">
-
-          <div class ="option-inner">
-            <form action ="#" id="form">
-              <h3>設定</h3>
-              <h3>軸設定</h3>
-              <label><input type="radio" name="sokuryo_math" value="math" checked >
-                幾何モード(x軸が左右、y軸が上下のモード)
-              </label>
-              <label><input type="radio" name="sokuryo_math" value="sokuryo">
-                測量モード(x軸が上下、y軸が左右のモード)
-              </label>
-
-              <br>
-              <br>
-              <h3>角度表記</h3>
-              <label><input type="radio" name="angle_notation" value="dosuhou_fun" checked>
-                度数法(分秒表記)
-              </label>
-              <label><input type="radio" name="angle_notation" value="dosuhou_10shin">
-                度数法(小数10進法表記)
-              </label>
-              <label><input type="radio" name="angle_notation" value="radian">
-                ラジアン(少数表記)
-              </label>
-              <label><input type="radio" name="angle_notation" value="radian_pi">
-                ラジアン(π表記)
-              </label>
-
-              <br>
-              <br>
-              <h3>少数の表示けた数</h3>
-              <label><input type="radio" name="digit" value="0">
-                0桁
-              </label>
-              <label><input type="radio" name="digit" value="1">
-                1桁
-              </label>
-              <label><input type="radio" name="digit" value="2">
-                2桁
-              </label>
-              <label><input type="radio" name="digit" value="3" checked>
-                3桁
-              </label>
-              <label><input type="radio" name="digit" value="4">
-                4桁
-              </label>
-              <label><input type="radio" name="digit" value="5">
-                5桁
-              </label>
-
-              <h3>表示・非表示</h3>
+            </div>
+          </li>
+          <li>
+            <div class =select_button>
+              <div class =heading_option>
+                表示設定
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class =select_button>
+              <div class =heading_area>
+                面積
+              </div>
+            </div>
+          </li>
 
 
-              <label><input type="checkbox" name="angle_indication" value="angle_on" checked>
-                角度
-              </label>
-              <label><input type="checkbox" name="distance_indication" value="distance_on" checked>
-                距離
-              </label>
-              <label><input type="checkbox" name="name_indication" value="name_on" checked>
-                点名
-              </label>
-              <label><input type="checkbox" name="grid_indication" value="grid_on" checked>
-                グリッド
-              </label>
-              <label><input type="checkbox" name="hover_indication" value="hove_on" checked>
-                座標値(点を上にマウス置いた際)
-              </label>
+          <li>
+            <div class =select_button>
+              <div class =heading_csv>
+                ファイル
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class =select_button>
+              <div class =heading_new_point>
+                新点作成
+              </div>
+            </div>
+          </li>
+        </ul>
 
+        <div class ="section">
+          <div class="list">
+            <div class>
+              <div class="list-inner">
+                <h3>点リスト</h3>
+                <form action ="#" id = "list_form">
+                  <table id ="points_list">
 
-
-              <div class ="imput-form" id ="kettei">
-                <div class="imput-form-inner">
+                  </table>
                   <br>
-                  <input class="sakusei" type="submit" value="決定" >
-                </div>
+                  <div class="list_dicision">
+                    <button  type ="button" onclick="listFormReset()" value="取り消し" >取り消し
+                    </button>
+                    <input  type="submit" value="決定" >
+                  </div>
+                </form>
+
               </div>
-            </form>
+            </div>
+          </div>
+
+          <div class="option">
+
+            <div class="hidden">
+
+              <div class ="option-inner">
+                <form action ="#" id="form">
+                  <h3>設定</h3>
+                  <h3>軸設定</h3>
+                  <label><input type="radio" name="sokuryo_math" value="math" checked >
+                    幾何モード(x軸が左右、y軸が上下のモード)
+                  </label>
+                  <label><input type="radio" name="sokuryo_math" value="sokuryo">
+                    測量モード(x軸が上下、y軸が左右のモード)
+                  </label>
+
+                  <br>
+                  <br>
+                  <h3>角度表記</h3>
+                  <label><input type="radio" name="angle_notation" value="dosuhou_fun" checked>
+                    度数法(分秒表記)
+                  </label>
+                  <label><input type="radio" name="angle_notation" value="dosuhou_10shin">
+                    度数法(小数10進法表記)
+                  </label>
+                  <label><input type="radio" name="angle_notation" value="radian">
+                    ラジアン(少数表記)
+                  </label>
+                  <label><input type="radio" name="angle_notation" value="radian_pi">
+                    ラジアン(π表記)
+                  </label>
+
+                  <br>
+                  <br>
+                  <h3>少数の表示けた数</h3>
+                  <label><input type="radio" name="digit" value="0">
+                    0桁
+                  </label>
+                  <label><input type="radio" name="digit" value="1">
+                    1桁
+                  </label>
+                  <label><input type="radio" name="digit" value="2">
+                    2桁
+                  </label>
+                  <label><input type="radio" name="digit" value="3" checked>
+                    3桁
+                  </label>
+                  <label><input type="radio" name="digit" value="4">
+                    4桁
+                  </label>
+                  <label><input type="radio" name="digit" value="5">
+                    5桁
+                  </label>
+
+                  <h3>表示・非表示</h3>
+
+
+                  <label><input type="checkbox" name="angle_indication" value="angle_on" checked>
+                    角度
+                  </label>
+                  <label><input type="checkbox" name="distance_indication" value="distance_on" checked>
+                    距離
+                  </label>
+                  <label><input type="checkbox" name="name_indication" value="name_on" checked>
+                    点名
+                  </label>
+                  <label><input type="checkbox" name="grid_indication" value="grid_on" checked>
+                    グリッド
+                  </label>
+                  <label><input type="checkbox" name="hover_indication" value="hove_on" checked>
+                    座標値(点を上にマウス置いた際)
+                  </label>
+
+
+
+                  <div class ="imput-form" id ="kettei">
+                    <div class="imput-form-inner">
+                      <br>
+                      <input class="sakusei" type="submit" value="決定" >
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class ="area_select">
+            <div class="hidden">
+              <div class="area-inner">
+                <h3>面積を計算する</h3>
+                <p>計算したい点をクリックして結ぶことで面積を計算します。</p>
+                <br>
+                <p>面積表示の削除</p>
+                <button type="button" onclick="areaDelete()">面積を消す</button>
+              </div>
+            </div>
+          </div>
+
+          <div class ="read_csv">
+            <div class ="hidden">
+              <div class="form-inner">
+                <form  action =# id ="read_csv">
+                  <!---csvファイルを選択し読み込めるようにする、理想はドラッグアンドドロップ、目標、追加と新規を使い分ける--->
+                  <h3>CSVファイルから点の読み込み</h3>
+                  <input type="file" id="example1" >
+                  <br>
+                  <label><input type="radio" name="new_add" value="new_point"  id="new_add">
+                    新規
+                  </label>
+                  <br>
+                  <label><input type="radio" name="new_add" value="add" checked id="new_add">
+                    追加
+                  </label>
+                  <br>
+                  <input class="sakusei" type="submit" value="読み込んだ点を送信" >
+                </form>
+                <br>
+                <h3>出力</h3>
+                <h4>csv形式の表のダウンロード</h4>
+                <form  action =# id ="output">
+                  CSV形式で表を作成し、点を出力します。
+                  <br>
+                  <input class="sakusei" type="submit" value="ダウンロード" >
+                  <a id="download" target="_blank"></a>
+                </form>
+                <br>
+                <h4>URL出力</h4>
+                <form action =# id ="url_output">
+                  現在表示している点、線が表示できるURL(クエリパラメータ)を表示します。
+                  <br>
+                  <input class="sakusei" type="submit" value="URL表示" >
+                  <a id="urlmake" target="_blank"></a>
+                </form>
+                <div id="textbox_chushaku"></div>
+                <div class =textbox id =urlmake_textbox>
+            </div>
+                <h4>QRコード作成</h4>
+                <form action =# id ="qr_output">
+                  現在表示している点、線が表示できるURLのQRコードを作成します。
+                  <br>
+                  <input class="sakusei" type="submit" value="QRコード作成" >
+                  <a id="qrmake" target="_blank"></a>
+                </form>
+                <br>
+                <h4>印刷モード</h4>
+                <form action =# id ="printing_mode">
+                  印刷するのに最適化した表のサイズに変更します。
+                  <br>
+                  <input class="sakusei" type="submit" value="印刷モード" >
+                  <a id="printing_change" target="_blank"></a>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class ="create_new_point">
+            <div class ="hidden">
+              <div class="new_point-inner">
+
+                <h4>2点の中点</h4>
+                <form action=# id ="create_midpoint">
+                  点
+                  <select name="m_p1">
+
+                  </select>
+                  点
+                  <select name="m_p2">
+
+                  </select>
+                  の中点を
+                  <input class="sakusei" type="submit" value="作成する" >
+                </form>
+
+                <h4>2直線の交点</h4>
+                <form action=# id ="create_cross_point">
+                  直線
+                  <select name="c_p1" id ="c_p1">
+
+                  </select>
+                  <select name="c_p2">
+
+                  </select>,
+                  直線
+                  <select name="c_p3">
+
+                  </select>
+                  <select name="c_p4">
+
+                  </select>
+                  の交点を
+                  <input class="sakusei" type="submit" value="作成する" >
+                </form>
+
+
+                <br>
+
+                <h4>2点から角度と距離を指定して点を計算（トラバース計算）</h4>
+                <form action=# id ="create_traverse_point">
+                  点
+                  <select name="t_p1">
+                  </select>
+                  から
+                  <br>
+                  <h5>方向</h5>
+                  <select name="t_p2">
+                  </select>
+                  方向から
+                  <div class ="radian">
+                    <div class="hidden">
+                      角度<input type="text" name="t_angle"  value="" size= 10>rad、旋回
+                    </div>
+                  </div>
+                  <div class ="radian_pi">
+                    <div class ="hidden">
+                      角度<input type="text" name="t_angle"  value="" size= 10>π rad、旋回
+                    </div>
+                  </div>
+                  <div class ="dosuhou_10shin">
+                    <div class ="hidden">
+                      角度<input type="text" name="t_angle"  value="" size= 10>度、旋回
+                    </div>
+                  </div>
+                  <div class ="dosuhou_fun">
+                    <div class >
+                      角度<input type="text" name="t_angle_do"  value="" size= 2>°
+                      <input type="text" name="t_angle_fun"  value="" size= 2>'
+                      <input type="text" name="t_angle_byou"  value="" size= 2>"、旋回
+                    </div>
+                  </div>
+                  <h5>距離</h5>
+                  <input type="text" name="t_distance"  value="" size= 10>
+                  <br>
+                  の点を<input class="sakusei" type="submit" value="作成する" >
+                </form>
+                <br>
+                <h4>図上でクリックして点を追加する</h4>
+
+                <button  type ="button" onclick="clickInputMode()" value="図上入力" >図上入力モード
+                </button>
+                <button  type ="button" onclick="clickInputModeKaijo()" value="図上入力" >図上入力解除
+                </button>
+                <br>※図上入力モードでは図をクリックするとクリックした場所に新点を追加します。
+                <br><br>
+                <h4>座標を直接入力する</h4>
+                <form action ="#" id='make_circle'>
+                  点名
+                  <input type ="text" name ="name1" value ="" size= 10>
+                  (
+                  <input type="text" name="x1"  value="" size= 10>,
+                  <input type="text" name="y1"  value="" size= 10>
+                  )
+                  <br>
+                  <input class="sakusei" type="submit" value="入力した座標を追加" >
+
+
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class ="area_select">
-        <div class="hidden">
-          <div class="area-inner">
-            <h3>面積を計算する</h3>
-            <p>計算したい点をクリックして結ぶことで面積を計算します。</p>
-            <br>
-            <p>面積表示の削除</p>
-            <button type="button" onclick="areaDelete()">面積を消す</button>
-          </div>
-        </div>
-      </div>
-
-      <div class ="read_csv">
-        <div class ="hidden">
-          <div class="form-inner">
-            <form  action =# id ="read_csv">
-              <!---csvファイルを選択し読み込めるようにする、理想はドラッグアンドドロップ、目標、追加と新規を使い分ける--->
-              <h3>CSVファイルから点の読み込み</h3>
-              <input type="file" id="example1" >
-              <br>
-              <label><input type="radio" name="new_add" value="new_point"  id="new_add">
-                新規
-              </label>
-              <br>
-              <label><input type="radio" name="new_add" value="add" checked id="new_add">
-                追加
-              </label>
-              <br>
-              <input class="sakusei" type="submit" value="読み込んだ点を送信" >
-            </form>
-            <br>
-            <h3>点の出力</h3>
-
-            <form  action =# id ="output">
-              <!---
-              <label><input type="radio"name="output_type"value="csv"checked>
-              CSVファイル(カンマ区切りのCSVファイルを出力します、点の情報のみですが、Excel等で編集が可能です。)
-            </label>
-            <br>
-            <label><input type="radio"name="output_type"value="text">
-            textファイル(再度読み込んだ際に作成した線も表示しますが、編集は不可です。)
-          </label>
-          <br>
-        -->
-        CSV形式で点を出力します。
-        <br>
-        <input class="sakusei" type="submit" value="ダウンロード" >
-        <a id="download" target="_blank"></a>
-      </form>
     </div>
   </div>
-</div>
-<div class ="create_new_point">
-  <div class ="hidden">
-    <div class="new_point-inner">
-
-      <h4>2点の中点</h4>
-      <form action=# id ="create_midpoint">
-        点
-        <select name="m_p1">
-
-        </select>
-        点
-        <select name="m_p2">
-
-        </select>
-        の中点を
-        <input class="sakusei" type="submit" value="作成する" >
-      </form>
-
-      <h4>2直線の交点</h4>
-      <form action=# id ="create_cross_point">
-        直線
-        <select name="c_p1" id ="c_p1">
-
-        </select>
-        <select name="c_p2">
-
-        </select>,
-        直線
-        <select name="c_p3">
-
-        </select>
-        <select name="c_p4">
-
-        </select>
-        の交点を
-        <input class="sakusei" type="submit" value="作成する" >
-      </form>
 
 
-      <br>
-
-      <h4>2点から角度と距離を指定して点を計算（トラバース計算）</h4>
-      <form action=# id ="create_traverse_point">
-        点
-        <select name="t_p1">
-        </select>
-        から
-        <br>
-        <h5>方向</h5>
-        <select name="t_p2">
-        </select>
-        方向から
-        <div class ="radian">
-          <div class="hidden">
-            角度<input type="text" name="t_angle"  value="" size= 10>rad、旋回
-          </div>
-        </div>
-        <div class ="radian_pi">
-          <div class ="hidden">
-            角度<input type="text" name="t_angle"  value="" size= 10>π rad、旋回
-          </div>
-        </div>
-        <div class ="dosuhou_10shin">
-          <div class ="hidden">
-            角度<input type="text" name="t_angle"  value="" size= 10>度、旋回
-          </div>
-        </div>
-        <div class ="dosuhou_fun">
-          <div class >
-            角度<input type="text" name="t_angle_do"  value="" size= 2>°
-            <input type="text" name="t_angle_fun"  value="" size= 2>'
-            <input type="text" name="t_angle_byou"  value="" size= 2>"、旋回
-          </div>
-        </div>
-        <h5>距離</h5>
-        <input type="text" name="t_distance"  value="" size= 10>
-        <br>
-        の点を<input class="sakusei" type="submit" value="作成する" >
-      </form>
-      <br>
-      <h4>図上でクリックして点を追加する</h4>
-
-      <button  type ="button" onclick="clickInputMode()" value="図上入力" >図上入力モード
-      </button>
-      <button  type ="button" onclick="clickInputModeKaijo()" value="図上入力" >図上入力解除
-      </button>
-      <br>※図上入力モードでは図をクリックするとクリックした場所に新点を追加します。
-      <br><br>
-      <h4>座標を直接入力する</h4>
-      <form action ="#" id='direct_input'>
-        点名
-        <input type ="text" name ="name1" value ="" size= 10>
-        (
-        <input type="text" name="x1"  value="" size= 10>,
-        <input type="text" name="y1"  value="" size= 10>
-        )
-        <br>
-        <input class="sakusei" type="submit" value="入力した座標を追加" >
-
-
-      </form>
-    </div>
-  </div>
-</div>
-</div>
-</div>
 <script src="jquery/jquery-3.4.1.min.js"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <!---<script src="d3/d3.min.js"></script> --->

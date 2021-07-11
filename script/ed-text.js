@@ -61,37 +61,45 @@ function traverseMenuChange(angle_notation){
 }
 
 
-
+//ここを再度記入するときにも適用する。ここにも関数を記載するか。
 function unvisibleAngle(){
   //gのクラスを用いてそこを非表示にする関するを設定。
+dispinfo[0]=0
 svg.select(".angles").attr("display","none")
 }
 function visibleAngle(){
   //gのクラスを用いてそこを非表示にする関するを設定。
+  dispinfo[0]=1
 svg.select(".angles").attr("display","inline")
 }
 function unvisibleName(){
   //gのクラスを用いてそこを非表示にする関するを設定。
+  dispinfo[2]=0
 svg.select(".points").select(".texts").attr("display","none")
 }
 function visibleName(){
+    dispinfo[2]=1
   //gのクラスを用いてそこを非表示にする関するを設定。
 svg.select(".points").select(".texts").attr("display","inline")
 }
 function visibleDistance(){
+    dispinfo[1]=1
   //gのクラスを用いてそこを非表示にする関するを設定。
 svg.select(".lines").select(".texts").attr("display","inline")
 }
 function unvisibleDistance(){
+      dispinfo[1]=0
   //gのクラスを用いてそこを非表示にする関するを設定。
 svg.select(".lines").select(".texts").attr("display","none")
 }
 
 function unvisibleGrid(){
+        dispinfo[3]=0
   //gのクラスを用いてそこを非表示にする関するを設定。
 svg.selectAll(".grid").attr("display","none")
 }
 function visibleGrid(){
+          dispinfo[3]=1
   //gのクラスを用いてそこを非表示にする関するを設定。
 svg.selectAll(".grid").attr("display","inline")
 }
@@ -122,7 +130,7 @@ function changeButtonPush(point_num){
 //点名をプルダウンリストにできるようにするやり方。
 function makePullDown(){
 let pull_down_inner_text =makePullDownInner(points_data)
-$("select").html(pull_down_inner_text)
+$("select").not('#paperselect').html(pull_down_inner_text)
 }
 
 function makePullDownInner(points_data){
@@ -145,6 +153,7 @@ function makeList(points_data){
   }
   let add_li = "<tr><td><input type =\"text\"class=\"textform\" id =\"new_name\"  value =\"\"></td><td><input type =\"text\"class=\"textform\" id =\"new_x\"  value =\"\"></td><td><input type =\"text\"class=\"textform\" id =\"new_y\" value =\"\"></td><td><button type=\"button\" value=\"add\">追 加</button></td></tr>"
   document.getElementById('points_list').insertAdjacentHTML('beforeend',add_li)
+}
 /*
   for(let i=0;i<points_data.length;i++){
 
@@ -176,7 +185,7 @@ function makeList(points_data){
         }
       }
     }
-    $('select').empty()
+    $('select').not('#paperselect').empty()
     makePullDown()
 
 
@@ -277,6 +286,54 @@ document.getElementById('create_midpoint').onsubmit = function(event){
 
   }
 
+  document.getElementById('url_output').onsubmit =function(event){
+    event.preventDefault();
+    //テキストboxを作成する。コピーボタンを作成し押すとクリップボードにコピーする。
+    let url_in_box = makeQuery()
+    console.log(url_in_box)
+    document.getElementById("textbox_chushaku").textContent ="※下のテキストボックスの内容をコピーできます。"
+    //let box_url =
+    $('.textbox ').empty();
+    document.getElementById('urlmake_textbox').insertAdjacentHTML("beforeEnd","<br><textarea rows =5 cols =60 >"+url_in_box+"</textarea>")
+  }
+
+//印刷モードにした際の処理　横幅、縦幅の固定、表の消去
+  document.getElementById('printing_mode').onsubmit =function(event){
+    event.preventDefault();
+
+    printing_mode[0]=true
+    newFigure()
+$('.menu_outer >div').toggleClass('hidden');
+$('.printing_menu>div').toggleClass('hidden');
+  }
+  //印刷モードで紙の大きさを変えた時の処理
+  function printingChange(){
+    let papersize = document.getElementById("paperselect").value
+    switch(papersize){
+    case "A3縦": printing_mode[1].width =950
+    printing_mode[1].height =1300; break;
+    case "A3横": printing_mode[1].width =1500
+    printing_mode[1].height =900; break;
+    case "A4縦": printing_mode[1].width =650
+    printing_mode[1].height =900; break;
+    case "A4横": printing_mode[1].width =950
+    printing_mode[1].height =550; break;
+  }
+  newFigure()
+}
+
+
+function printingOff(){
+  printing_mode[0]=false
+  newFigure()
+  $('.menu_outer >div').toggleClass('hidden');
+  $('.printing_menu>div').toggleClass('hidden');
+  }
+
+function printingOn(){
+
+  //ここに印刷に向けた処理、題名の入力ボックスをテキスト化、ボタンを消す。
+  window.print();
 }
 
 function listFormReset(){
@@ -340,58 +397,55 @@ drawFigure()
 
 if(document.getElementById('form').angle_indication.checked){
   visibleAngle()
+  dispinfo[0]=1
 }else{
   unvisibleAngle()
+    dispinfo[0]=0
 }
 
 if(document.getElementById('form').grid_indication.checked){
   visibleGrid()
+    dispinfo[3]=1
 }else{
   unvisibleGrid()
+    dispinfo[3]=0
 }
 if(document.getElementById('form').distance_indication.checked){
   visibleDistance()
+    dispinfo[1]=1
 }else{
   unvisibleDistance()
+    dispinfo[1]=0
 }
 
 if(document.getElementById('form').name_indication.checked){
   visibleName()
+    dispinfo[2]=1
 }else{
   unvisibleName()
+    dispinfo[2]=0
 }
 if(document.getElementById('form').hover_indication.checked){
   hover_mode =true
+  dispinfo[4]=1
 }else{
   hover_mode =false
+  dispinfo[4]=0
 }
 
 }
 
 //入力した点を追加するための処理
-document.getElementById('direct_input').onsubmit = function(event){
+document.getElementById('make_circle').onsubmit = function(event){
   event.preventDefault();
   let name1 = document.getElementById('direct_input').name1.value
   let x1 = document.getElementById('direct_input').x1.value
   let y1 = document.getElementById('direct_input').y1.value
-  /*
-  let name2 = document.getElementById('direct_input').name2.value
-  let x2 = document.getElementById('direct_input').x2.value
-  let y2 = document.getElementById('direct_input').y2.value
-  let name3 = document.getElementById('direct_input').name3.value
-  let x3 = document.getElementById('direct_input').x3.value
-  let y3 = document.getElementById('direct_input').y3.value
-  */
+
   if((Number(x1)||x1==="0")&&(Number(y1)||y1==="0")){
     createNewPoint(x1,y1,name1)
   }
-  /*
-  if((Number(x2)||x2==="0")&&(Number(y2)||y2==="0")){
-    createNewPoint(x2,y2,name2)
-  }if((Number(x3)||x3==="0")&&(Number(y3)||y3==="0")){
-    createNewPoint(x3,y3,name3)
-  }
-  */
+
 }
 
 //ファイルアップローダー用の内容を書く←アップロードではなくて読み込みだけでよい？
@@ -452,8 +506,15 @@ document.getElementById('read_csv').onsubmit= function(event){
     //リストを作る処理
     $('table').empty()
     makeList(points_data)
+    //プルダウンのタグを更新する処理
+    $('select').not('#paperselect').empty()
+    makePullDown()
   }
 
+}
+document.getElementById('qr_output').onsubmit= function(event){
+  event.preventDefault();
+  makeQR()
 }
 
 //ファイルを出力するための個所
@@ -462,32 +523,102 @@ document.getElementById('output').onsubmit= function(event){
   console.log("syuturyoku");
   let contents ="name,x_co,y_co\n";
   for(let i=0;i<points_data.length;i++){
-  contents += points_data[i].name+","+points_data[i].x_co+","+points_data[i].y_co+"\n"
-}
-    const blob = new Blob([contents], {type: 'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    document.body.appendChild(a);
-//ファイル名の設定　今日の日付＋listとかかな
-let now =new Date();
-console.log(now)
-let year =String(now.getFullYear());
-let month =String(now.getMonth()+1);
-if (now.getMonth()<9){
-  month ="0"+month
-}
-let date =String(now.getDate());
-if (now.getDate()<10){
-  date ="0"+date
-}
-    a.download = year+month+date+'list.csv';
-    a.href = url;
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-
+    contents += points_data[i].name+","+points_data[i].x_co+","+points_data[i].y_co+"\n"
   }
+  const blob = new Blob([contents], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  //ファイル名の設定　今日の日付＋listとかかな
+  let now =new Date();
+  console.log(now)
+  let year =String(now.getFullYear());
+  let month =String(now.getMonth()+1);
+  if (now.getMonth()<9){
+    month ="0"+month
+  }
+  let date =String(now.getDate());
+  if (now.getDate()<10){
+    date ="0"+date
+  }
+  a.download = year+month+date+'list.csv';
+  a.href = url;
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 
+}
+
+function makeQuery(){
+
+    let contents ="https://easy-plot.com/?";
+    //バージョン管理
+    let version ="1"
+    contents +="ver="+version+"&"
+    //設定の管理
+    let option_num =""
+    if(sokuryo_math=="math"){
+      option_num +=String(1)
+    }else{option_num +=String(2)}
+    switch(angle_notation){
+      case "dosuhou_fun" : option_num += String(1); break;
+      case "dosuhou_10shin" : option_num +=String(2); break;
+      case "radian" : option_num +=String(3); break;
+      case "radian_pi" : option_num +=String(4); break;
+    }
+    option_num +=String(digit)
+    for(let i=0;i<dispinfo.length;i++){
+      option_num +=String(dispinfo[i])
+
+    }
+    contents +="opt="+option_num+"&pnt="
+    for(let i=0;i<points_data.length;i++){
+      contents += points_data[i].name+","+points_data[i].x_co+","+points_data[i].y_co+","
+    }
+    //線をつける関数を作る(未)
+    let ln =[]
+    //numと列の順番を整合させる関数を作る
+    function numToOrder(nm){
+      let order =0
+      for(let i=0;i<points_data.length;i++){
+        if(nm==points_data[i].num){
+          order = i
+        }
+      }
+      return order
+    }
+    //linksから点を取ってくる。
+    for(let i=0;i<links.length;i++){
+      ln.push(numToOrder(links[i][0].num))
+      ln.push(numToOrder(links[i][1].num))
+    }
+    console.log(ln)
+    //ここで線用のクエリパラメータを作成
+    contents += "&ln="
+    for(let i=0;i<ln.length;i++){
+       contents+=String(ln[i])+","
+
+    }
+    return contents
+}
+
+//クエリパラメータを出力する関数
+function makeQR(){
+  let contents = makeQuery()
+  console.log(contents)
+  let encodeURL = encodeURIComponent(contents)
+  console.log(encodeURL)
+
+  open("https://api.qrserver.com/v1/create-qr-code/?data="+encodeURL)
+}
+//ファイルをクエリパラメータで出力する。
+/*
+document.getElementById('query-output').onsubmit= function(event){
+  event.preventDefault();
+  makeQuery()
+
+}
+*/
 
 
 
