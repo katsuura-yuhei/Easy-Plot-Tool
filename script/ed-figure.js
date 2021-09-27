@@ -37,7 +37,7 @@ let y = d3.scaleLinear()
 let delete_mode = false
 
 //設定で決めるもの
-let sokuryo_math ="math"
+let sokuryo_math ="sokuryo"
 let angle_notation ="dosuhou_fun"
 let digit =3
 let dispinfo =[1,1,1,1,1]
@@ -1068,13 +1068,19 @@ function plotPoints(){
   //ここはカーソルでふれたときに出るホバーの作成
   .on("mouseover", function(d) {
     if(hover_mode){
-    div.transition()
-    .duration(100)
-    .style("opacity", .9);
-    div.html("("+d.x_co + "," + d.y_co+")")
-    .style("left", (d3.event.pageX) + "px")
-    .style("top", (d3.event.pageY - 28) + "px");
-  }
+      div.transition()
+      .duration(100)
+      .style("opacity", .9);
+      if(sokuryo_math=="sokuryo"){
+        div.html("("+d.y_co + "," + d.x_co+")")
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+      }else{
+        div.html("("+d.x_co + "," + d.y_co+")")
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+      }
+    }
   })
   .on("mouseout", function(d) {
     div.transition()
@@ -1098,29 +1104,29 @@ function plotPoints(){
           drawAreaLine(area_link[0],area_link[area_link.length-1])
           area_link=[]
         }else{
-        for(let i =1;i<area_link.length;i++){
-          if(d.num == area_link[i].num){
-            hantei =false
-          }}
+          for(let i =1;i<area_link.length;i++){
+            if(d.num == area_link[i].num){
+              hantei =false
+            }}
+          }
         }
-      }
-      if(hantei){
-      d3.select(this).style("fill","#1fde9b");
-      area_link.push({name:d.name,x_co:d.x_co,y_co:d.y_co,num:d.num})
-      if(area_link.length>1){
-        drawAreaLine(area_link[area_link.length-2],area_link[area_link.length-1])
-      }
-      console.log(area_link)
-    }
-    }else{
-    //save_point関数のTFで処理を変える
-    if(save_point[0]){
-      svg.selectAll("circle").style("fill","black")
-      if(save_point[1].num<d.num){
-        save_link = [save_point[1],{name:d.name,x_co:d.x_co,y_co:d.y_co,num:d.num}]
-      }
-      if(save_point[1].num>d.num){
-        save_link = [{name:d.name,x_co:d.x_co,y_co:d.y_co,num:d.num},save_point[1]]
+        if(hantei){
+          d3.select(this).style("fill","#1fde9b");
+          area_link.push({name:d.name,x_co:d.x_co,y_co:d.y_co,num:d.num})
+          if(area_link.length>1){
+            drawAreaLine(area_link[area_link.length-2],area_link[area_link.length-1])
+          }
+          console.log(area_link)
+        }
+      }else{
+        //save_point関数のTFで処理を変える
+        if(save_point[0]){
+          svg.selectAll("circle").style("fill","black")
+          if(save_point[1].num<d.num){
+            save_link = [save_point[1],{name:d.name,x_co:d.x_co,y_co:d.y_co,num:d.num}]
+          }
+          if(save_point[1].num>d.num){
+            save_link = [{name:d.name,x_co:d.x_co,y_co:d.y_co,num:d.num},save_point[1]]
       }
       //ここはセーブリンクを確認する場所、セーブリンクが0だとエラーになる。
       if(save_link.length){

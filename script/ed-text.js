@@ -512,11 +512,12 @@ document.getElementById('read_csv').onsubmit= function(event){
   }
 
 }
+/*
 document.getElementById('qr_output').onsubmit= function(event){
   event.preventDefault();
   makeQR()
 }
-
+*/
 //ファイルを出力するための個所
 document.getElementById('output').onsubmit= function(event){
   event.preventDefault();
